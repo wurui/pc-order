@@ -1,0 +1,353 @@
+.oxmod-pc-order {
+  /* CSS */
+
+  .bgcolor, .textcolor {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    border: solid 1px #000;
+    border-radius: 2px;
+    margin: 10px;
+    text-align: center;
+    font-size: 12px;
+    vertical-align: middle;
+  }
+
+  .bgcolor input, .textcolor input {
+    margin-top: 35px;
+  }
+
+  .bgcolor-1 {
+    background-color: #0b97c4;
+  }
+
+  .bgcolor-2 {
+    background-color: yellow;
+  }
+
+  .bgcolor-3 {
+    background-color: red;
+  }
+
+  .bgcolor-4 {
+    background-color: rosybrown;
+  }
+
+  .bgcolor-5 {
+    background-color: green;
+  }
+
+  .bgcolor-6 {
+    background-color: greenyellow;
+  }
+
+  .bgcolor-7 {
+    background-color: gray;
+  }
+
+  .bgcolor-8 {
+    background-color: gold;
+  }
+
+  .bgcolor-9 {
+    background-color: blueviolet;
+  }
+
+  .bgcolor-10 {
+    background-color: silver;
+  }
+
+  .bgcolor-11 {
+    background-color: chocolate;
+  }
+
+  .bgcolor-12 {
+    background-color: cadetblue;
+  }
+
+  .color-1 {
+    background-color: #fff;
+  }
+
+  .color-2 {
+    background-color: yellow;
+  }
+
+  .color-3 {
+    background-color: red;
+  }
+
+  .color-4 {
+    background-color: rosybrown;
+  }
+
+  .color-5 {
+    background-color: green;
+  }
+
+  .color-6 {
+    background-color: greenyellow;
+  }
+
+  .color-7 {
+    background-color: gray;
+  }
+
+  .color-8 {
+    background-color: gold;
+  }
+
+  .color-9 {
+    background-color: #0099cc;
+  }
+
+  .color-10 {
+    background-color: silver;
+  }
+
+  .color-11 {
+    background-color: chocolate;
+  }
+
+  .color-12 {
+    background-color: cadetblue;
+  }
+
+  .preview {
+
+    border-radius: 40px;
+    width: 490px;
+    height: 560px;
+    margin: 10px auto;
+    box-shadow: 0px 0px 5px #999;
+    overflow: hidden;
+    border: solid 1px #ccc;
+    font-family: sans-serif;
+    text-align: center;
+  }
+
+  .qrcode {
+    margin-top: 40px;
+    width: 320px;
+    padding: 5px;
+    border: solid 1px #ccc;
+  }
+
+  .card-header {
+    color: #fff;
+    font-size: 85px;
+    letter-spacing: 5px;
+    height: 140px;
+    line-height: 140px;
+    font-family: '黑体', sans-serif;
+    font-weight: 700;
+    text-shadow: 5px -5px 1px #444;
+    transform: scale(1, 1.2);
+    overflow: hidden;
+  }
+  .card-body {
+    background-color: #fff;
+    height: 380px;
+  }
+  .card-footer {
+    height: 41px;
+    line-height: 30px;
+    font-size: 18px;
+    color: #666;
+    background-color: #fff;
+    letter-spacing: 1px;
+    margin-top: -1px; /**解决缩放有条线的问题*/
+  }
+
+  .bt-pay,
+  .bt-submit {
+    border: solid 1px #ccc;
+    background-color: #0b97c4;
+    color: #fff;
+    font-size: 18px;
+    width: 200px;
+    border-radius: 5px;
+    height: 40px;
+  }
+  .bt-pay {
+    background-color: #f60;
+  }
+  .bt-pay:disabled,
+  .bt-submit:disabled {
+    background-color: #999;
+    color: #ccc;
+  }
+  .snapshot {
+    width: 150px;
+    height: 170px;
+  }
+  .snapshot > .bt-x {
+    font-size: 30px;
+    color: #f00;
+    position: absolute;
+    z-index: 1;
+    margin-left: 52px;
+    margin-top: -10px;
+    background-color: rgba(0, 0, 0, .6);
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    text-align: center;
+    visibility: hidden;
+    cursor: pointer;
+  }
+  .snapshot:hover > .bt-x {
+    visibility: visible;
+  }
+  .snapshot > .preview {
+    transform: scale(.3);
+    transform-origin: 0 0;
+  }
+  .orders-table,
+  .order-table {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .order-table td {
+    padding: 0 10px;
+    font-size: 14px;
+
+  }
+  .orders-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+  .orders-table thead td {
+    color: #08c;
+    font-weight: 200;
+  }
+  .order-table tfoot td {
+    border-top: solid 1px #eee;
+    padding: 10px;
+  }
+  .order-table thead th {
+    border-bottom: solid 1px #ccc;
+    line-height: 30px;
+    font-size: 15px;
+    text-align: center;
+  }
+  .order-table tbody td {
+    text-align: center;
+  }
+  .supports > span {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 20px;
+    font-size: 12px;
+    color: #999;
+  }
+  .central {
+    position: absolute;
+    margin-left: 210px;
+    margin-top: 170px;
+    width: 78px;
+    height: 78px;
+
+    text-align: center;
+    line-height: 78px;
+    overflow: hidden;
+
+  }
+  .central-bg {
+    background-color: #fff;
+  }
+  .central img {
+    width: 78px;
+    height: 78px;
+    vertical-align: middle;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+  .carlogo {
+    display: inline-block;
+  }
+  .carlist > .carlogo {
+    padding: 0 5px;
+  }
+  .switches {
+    border-top: solid 1px #0099cc;
+    font-size: 0;
+  }
+  .switches button {
+    background-color: #999;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    height: 30px;
+    width: 100px;
+    border-style: none;
+    border-right: solid 1px #fff;
+  }
+  .switches button:hover {
+    opacity: .9;
+  }
+
+  .price {
+    color: #f60;
+    font-size: 1.2em;
+  }
+  .price:before {
+    content: '\00a5\20';
+    font-family: sans-serif;
+  }
+  .orders-table {
+    border: solid 1px #09c;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .orders-table thead td {
+    border-bottom: solid 1px #eee;
+    background-color: #def;
+  }
+  .orders-table tfoot td:first-child,
+  .orders-table thead td:first-child {
+    text-align: left;
+  }
+  .orders-table tfoot td:last-child,
+  .orders-table thead td:last-child {
+    text-align: right;
+  }
+  .orders-table tbody td:last-child {
+    text-align: center;
+  }
+  .orders-table tfoot td {
+    border-top: solid 1px #f5f5f5;
+  }
+  .orders-table .order-item {
+    float: left;
+    height: 200px;
+    width: 160px;
+    text-align: center;
+  }
+  .myorders {
+    margin: 0 auto;
+    text-align: left;
+    width: 990px;
+  }
+  .empty-order {
+    font-size: 16px;
+    color: #999;
+    text-align: center;
+    margin-top: 80px;
+  }
+  .empty-order .iconfont {
+    color: #ccc;
+    vertical-align: middle;
+  }
+  .bt-produce, .bt-refund, .bt-send {
+    background-color: #f5f5f5;
+    border: solid 1px #555;
+    padding: 2px 10px;
+    color: #333;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+}
