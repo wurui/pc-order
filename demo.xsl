@@ -12,9 +12,14 @@
         <script src="https://a.oxm1.cc/js/require.js"></script>
       </head>
       <body>
-        <div class="layout">
-          <xsl:call-template name="wurui.pc-order" />
-        </div>
+          <style>
+              .pc-page{margin:0 auto;width:1200px;}
+          </style>
+          <div class="pc-page">
+            <div class="layout">
+              <xsl:call-template name="wurui.pc-order" />
+            </div>
+          </div>
         <script><![CDATA[
           require.config({
             paths: {

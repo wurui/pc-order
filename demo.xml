@@ -14,52 +14,52 @@
         <icon>//oxm1.cc/img/app_default.png</icon>
     </p>
     <data>
-            <orders>
-        <i>
-            <title>
-                wallet
-            </title>
-            <detail>
-                watch
-            </detail>
-            <tradeno>
-                light-weight car
-            </tradeno>
-            <totalfee>
-                0.86
-            </totalfee>
-            <time>
-                good car
-            </time>
-            <totalcount>
-                5
-            </totalcount>
-            <status>
-                wallet
-            </status>
-            <seller>
-                powerful car
-            </seller>
-            <buyer>
-                mobilephone
-            </buyer>
-            <delivery>
-                car
-            </delivery>
-            <paymethod>
-                tough camera
-            </paymethod>
-            <bill>
-                <i>
-                    <item>
-                        laptop
-                    </item>
-                    <value>
-                        11.86
-                    </value>
-                </i>
-            </bill>
-        </i>
-    </orders>
+        <orders>
+            <i>
+                <title>
+                    wallet
+                </title>
+                <detail>
+                    watch
+                </detail>
+                <tradeno>
+                    light-weight car
+                </tradeno>
+                <totalfee>
+                    0.86
+                </totalfee>
+                <time>
+                    good car
+                </time>
+                <totalcount>
+                    5
+                </totalcount>
+                <status>
+                    wallet
+                </status>
+                <seller>
+                    powerful car
+                </seller>
+                <buyer>
+                    mobilephone
+                </buyer>
+                <delivery>
+                    car
+                </delivery>
+                <paymethod>
+                    tough camera
+                </paymethod>
+                <bill>
+                    <i>
+                        <item>
+                            laptop
+                        </item>
+                        <value>
+                            11.86
+                        </value>
+                    </i>
+                </bill>
+            </i>
+        </orders>
     </data>
 </root>
