@@ -181,7 +181,7 @@ var tpl,$list,customizeRest,orderRest;
 
 var getAndRender = function () {
 
-        orderRest.get(function (r) {
+        orderRest.get({seller:1},function (r) {
             // $.getJSON(apiHost + '/smct/getorders?callback=?', function (r) {
             if (r && r.length) {
                 var list = r;
@@ -252,10 +252,11 @@ var getAndRender = function () {
     init:function($mod){
         $list=$('.J_list',$mod);
         tpl=$('.J_tpl',$mod).html();
-        var uid = $mod.attr('data-uid');
+        var uid = $mod.attr('data-uid'),
+            dsid=$mod.attr('data-dsid');
         //payurl=$mod.attr('data-payurl');
-        customizeRest = OXJS.useREST('customize/e0ee59439b39fcc3/u/' + encodeURIComponent(uid)).setDevHost('http://local.openxsl.com/'),
-        orderRest = OXJS.useREST('order/e0ee59439b39fcc3/u/' + encodeURIComponent(uid)).setDevHost('http://local.openxsl.com/');
+        customizeRest = OXJS.useREST('customize/'+dsid+'/u/' + encodeURIComponent(uid)).setDevHost('http://local.openxsl.com/'),
+        orderRest = OXJS.useREST('order/'+dsid+'/u/' + encodeURIComponent(uid)).setDevHost('http://local.openxsl.com/');
 
         getAndRender();
 
