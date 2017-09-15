@@ -1,5 +1,15 @@
+@font-face {
+  font-family: 'iconfont-pc-order';
+  /* project id 266910 */
+  src: url('//at.alicdn.com/t/font_4fgzqxlpzvv7k3xr.eot');
+  src: url('//at.alicdn.com/t/font_4fgzqxlpzvv7k3xr.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_4fgzqxlpzvv7k3xr.woff') format('woff'), url('//at.alicdn.com/t/font_4fgzqxlpzvv7k3xr.ttf') format('truetype'), url('//at.alicdn.com/t/font_4fgzqxlpzvv7k3xr.svg#iconfont') format('svg');
+}
 .oxmod-pc-order {
   /* CSS */
+}
+.oxmod-pc-order .iconfont {
+  font-family: iconfont-pc-order;
+  font-style: normal;
 }
 .oxmod-pc-order .bgcolor,
 .oxmod-pc-order .textcolor {
@@ -308,6 +318,10 @@
 .oxmod-pc-order .empty-order .iconfont {
   color: #ccc;
   vertical-align: middle;
+  font-size: 50px;
+}
+.oxmod-pc-order .admin-ops .iconfont {
+  font-size: 15px;
 }
 .oxmod-pc-order .bt-produce,
 .oxmod-pc-order .bt-refund,
@@ -318,4 +332,110 @@
   color: #333;
   display: inline-block;
   cursor: pointer;
+}
+.oxmod-pc-order .order-client-h5:before {
+  font-family: 'iconfont-pc-order';
+  content: '\e603';
+  font-size: 15px;
+  color: #000;
+}
+.oxmod-pc-order .source {
+  font-size: 0;
+}
+.oxmod-pc-order .source:before {
+  color: #666;
+  font-size: 20px;
+  font-family: 'iconfont-pc-order';
+}
+.oxmod-pc-order .source-wx:before {
+  content: '\e605';
+}
+.oxmod-pc-order .source-wb:before {
+  content: '\e60f';
+}
+.oxmod-pc-order .source-qq:before {
+  content: '\e60e';
+}
+.oxmod-pc-order .source-zfb:before {
+  content: '\e64f';
+}
+.oxmod-pc-order .payment {
+  font-size: 15px;
+  font-style: normal;
+}
+.oxmod-pc-order .payment:before {
+  font-family: iconfont-pc-order;
+}
+.oxmod-pc-order .payment-alipay:before {
+  content: '\e64f';
+  color: #009fe8;
+}
+.oxmod-pc-order .payment-wxpay:before {
+  content: '\e638';
+  color: #09bb07;
+}
+.oxmod-pc-order div.myorders {
+  width: 1100px;
+}
+.oxmod-pc-order .custom textarea {
+  height: 40px;
+  vertical-align: top;
+}
+.oxmod-pc-order .customize td {
+  padding: 10px;
+}
+.oxmod-pc-order input[type="number"] {
+  width: 40px;
+}
+.oxmod-pc-order .searchbar {
+  padding: 10px 0;
+}
+.oxmod-pc-order .lrbar {
+  font-size: 0;
+  margin: 0 10px;
+}
+.oxmod-pc-order .lrbar > span {
+  width: 50%;
+  font-size: 14px;
+  display: inline-block;
+  vertical-align: top;
+}
+.oxmod-pc-order .lrbar > span:first-child {
+  text-align: left;
+}
+.oxmod-pc-order .lrbar > span:last-child {
+  text-align: right;
+}
+.oxmod-pc-order .lrbar73 > span:first-child {
+  width: 70%;
+}
+.oxmod-pc-order .lrbar73 > span:last-child {
+  width: 30%;
+}
+.oxmod-pc-order .lrbar82 > span:first-child {
+  width: 80%;
+}
+.oxmod-pc-order .lrbar82 > span:last-child {
+  width: 20%;
+}
+.oxmod-pc-order .lrbar37 > span:first-child {
+  width: 30%;
+}
+.oxmod-pc-order .lrbar37 > span:last-child {
+  width: 70%;
+}
+.oxmod-pc-order .lrbar28 > span:first-child {
+  width: 20%;
+}
+.oxmod-pc-order .lrbar28 > span:last-child {
+  width: 80%;
+}
+.oxmod-pc-order .order-op {
+  line-height: 2;
+}
+.oxmod-pc-order .status-0 {
+  color: #999;
+}
+.oxmod-pc-order .status-1 {
+  color: #f90;
 }
