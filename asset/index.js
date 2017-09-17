@@ -1,4 +1,4 @@
-define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
+define(['mustache', 'oxjs', './factory'], function(Mustache, OXJS, Factory) {
     var tpl, $list, customizeRest, orderRest, codeRest, searchForm, $totalCount;
     var StatusCodes = {
         NEW: 0,
@@ -13,33 +13,34 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
         REFUNDING: 91,
         REFUND_FAIL: 94
     };
-    var timeformat = function (d) {
+    var timeformat = function(d) {
         if (typeof d != 'object') {
             d = new Date(d);
         }
-        var prefix0 = function (n) {
+        var prefix0 = function(n) {
             return (n / 100).toFixed(2).substr(2)
         };
         return [d.getFullYear(), prefix0(d.getMonth() + 1), prefix0(d.getDate())].join('-') + ' ' + [d.getHours(), prefix0(d.getMinutes()), prefix0(d.getSeconds())].join(':')
     };
 
 
-    var addrToString = function () {
+    var addrToString = function() {
         if (/北京|天津|上海|重庆/.test(this.province)) {
             this.city = '';
         }
         return [this.name, '(' + this.phone + ')', this.province, this.city, this.district, this.detail].join(' ')
     }
 
-    var orderStatus = function (data) {
+
+    var orderStatus = function(data) {
         //data.status = StatusCodes.PAID
         var st = data.status;
         switch (st) {
             case StatusCodes.NEW:
-                return '<p>未付款</p>';//<button data-role="close" type="button">关闭</button>
+                return '<p>未付款</p>'; //<button data-role="close" type="button">关闭</button>
             case StatusCodes.UNPAID:
                 return '<p>激活时付款</p><button data-role="produce" type="button">生产</button>'
-            case StatusCodes.PAID://todo: 后面去掉单独生产
+            case StatusCodes.PAID: //todo: 后面去掉单独生产
                 return '<p>已付款</p><button data-role="produce" type="button">生产</button>';
             case StatusCodes.RECEIVED:
                 return '<p>生产中</p><button data-role="send" type="button">发货</button><br/><button data-role="produce" type="button">重新生产</button><br/><a href="/smctadmin/exportsheet?oids=' + data._id + '" target="download">导出发货单</a>';
@@ -55,34 +56,36 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
             case StatusCodes.REFUNDING:
                 return '<p>买家申请退款<br/>时间:' + timeformat(data.mts) + '</p><a target="_blank" href="/smctadmin/dealrefund?from=smct&oid=' + data._id + '">' + (st == StatusCodes.REFUNDING ? '继续' : '') + '退款</a><p><button data-role="force" type="button">手工处理</button></p>'
             case StatusCodes.CLOSED:
-                return '<p>订单已关闭</p>'//<button data-role="del" type="button">删除订单</button>
-            default :
+                return '<p>订单已关闭</p>' //<button data-role="del" type="button">删除订单</button>
+            default:
                 return '<p>--</p>'
         }
     }
 
-    var param2settings = function (param) {
-        if (!param)return {};
+    var param2settings = function(param) {
+        if (!param) return {};
         var obj = {};
         for (var i = 0, n; n = param[i++];) {
             obj[n.label] = n.value;
-        }//console.log(obj)
+        } //console.log(obj)
         return obj;
     };
 
-    var getAndRender = function () {
+    var getAndRender = function() {
 
         var sf = searchForm;
         var status = sf.status.value;
         var days = sf.days.value;
         var _id = sf._id.value;
-        var s = {seller: 1};
+        var s = {
+            seller: 1
+        };
         if (days) {
             var oneday = 24 * 3600 * 1000,
                 now = new Date;
             now.setHours(8 + now.getTimezoneOffset() / 60, 0, 0, 0);
             var ts0 = now.getTime() - days * oneday;
-            s._cts = ts0;//{$gte: ts0};
+            s._cts = ts0; //{$gte: ts0};
 
         }
         if (status) {
@@ -95,7 +98,7 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                 case 'produce':
                     s.status = StatusCodes.PAID;
                     break
-                default :
+                default:
                     s.status = status - 0;
                     break
             }
@@ -104,7 +107,7 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
             s._id = _id.toLowerCase();
         }
 
-        orderRest.get(s, function (r) {
+        orderRest.get(s, function(r) {
             // $.getJSON(apiHost + '/smct/getorders?callback=?', function (r) {
             if (r && r.length) {
                 var list = r;
@@ -122,8 +125,11 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                         }
                     }
                 }
-                customizeRest.get({ids: bids.join(',')}, function (r) {
-                    var buildObj = {}, builds = r;
+                customizeRest.get({
+                    ids: bids.join(',')
+                }, function(r) {
+                    var buildObj = {},
+                        builds = r;
                     for (var i = 0, build; build = builds[i++];) {
                         buildObj[build._id] = build;
                     }
@@ -133,7 +139,7 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                         n.order_no = n._id.toUpperCase();
                         n.order_time = n.cts ? timeformat(n.cts) : n.time;
                         n.address = addrToString.call(n.delivery)
-                        //n.status='已付款';
+                            //n.status='已付款';
                         n.op = orderStatus(n);
                         // n.statusDesc = statusDesc(n)
                         n.totalsum = (n.totalfee - 0).toFixed(2);
@@ -146,7 +152,19 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
 
                     $list.html(Mustache.render(tpl, {
                         data: list,
-                        fullcarlogo: function () {
+                        payinfo: function() {
+                            
+                            switch (this.payment && this.payment.type) {
+                                case 'alipay':
+                                case 'wxpay':
+
+                                    return '<i class="payment payment-' + this.payment.type + '"></i>'
+                                default:
+                                    return ''
+                            }
+
+                        },
+                        fullcarlogo: function() {
 
                             var str = ''
                             if (/\d+/.test(this)) {
@@ -166,13 +184,13 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
             }
         });
     };
-    var createBatchNo = function () {
+    var createBatchNo = function() {
         var key = 'produceBatchJSON';
         var produceJSON = localStorage.getItem(key) || '{}';
 
         produceJSON = JSON.parse(produceJSON);
 
-        var producerNo = 1;//
+        var producerNo = 1; //
         var today = new Date();
         var datestamp = today.getFullYear() % 2000 * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
         var batchIndex = produceJSON[datestamp.toString()] || 0;
@@ -186,7 +204,7 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
 
     };
 
-    var syncCodeAndProduce = function ($ordertables, fn) {
+    var syncCodeAndProduce = function($ordertables, fn) {
 
         var batchNo = createBatchNo();
 
@@ -194,11 +212,14 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
         var renderConf = {};
         var qs_json = [];
         var oids = [];
-        $ordertables.each(function (idex, tbl) {
+        $ordertables.each(function(idex, tbl) {
             var oid = this.getAttribute('data-id'),
-                code_qs = {tid: oid, count: 0};
+                code_qs = {
+                    tid: oid,
+                    count: 0
+                };
             //oids.push(oid);
-            $('tbody>tr>td>.order-item', this).each(function (i, n) {
+            $('tbody>tr>td>.order-item', this).each(function(i, n) {
                 var $n = $(n),
                     bid = $n.attr('data-bid'),
                     count = $n.attr('data-count') * 1,
@@ -212,14 +233,16 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                     tplcolor: $preview.css('background-color'),
                     text1: $('.card-header', $preview).text(),
                     text2: $('.card-footer>span', $preview).text(),
-                    carlogo: $('.central>img',$preview).attr('src')
+                    carlogo: $('.central>img', $preview).attr('src')
                 }
             });
             qs_json.push(code_qs)
 
 
         });
-        codeRest.post({json: JSON.stringify(qs_json)}, function (r) {
+        codeRest.post({
+            json: JSON.stringify(qs_json)
+        }, function(r) {
             //$.post('/smctadmin/produce', {oids: oids.join(','), batch_no: batchNo}, function (r) {
 
             var codes = [],
@@ -239,12 +262,15 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
 
                 for (var j = 0; j < codes.length; j++) {
                     if (codes[j].oid == oid) {
-                        order_codes.push({code: codes[j], renderConf: renderConf[k]});
+                        order_codes.push({
+                            code: codes[j],
+                            renderConf: renderConf[k]
+                        });
                         codes.splice(j, 1);
                         j--;
                         count--;
                     }
-                    if(!count)break
+                    if (!count) break
                 }
 
             }
@@ -255,22 +281,27 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
 
     };
     return {
-        init: function ($mod) {
-            var refund_url=$mod.attr('data-refund');
-            $list = $('.J_list', $mod).on('click', function (e) {
+        init: function($mod) {
+            var refund_url = $mod.attr('data-refund');
+            $list = $('.J_list', $mod).on('click', function(e) {
                 var tar = e.target,
                     $tb = $(tar).closest('table'),
                     _id = $tb.attr('data-id')
                 switch (tar.getAttribute('data-role')) {
                     case 'del':
-                        orderRest.del({_id: _id}, function (r) {
+                        orderRest.del({
+                            _id: _id
+                        }, function(r) {
                             if (r && r.code == 0) {
                                 $tb.remove();
                             }
                         });
                         break
                     case 'close':
-                        orderRest.put({_id: _id, status: 5}, function (r) {
+                        orderRest.put({
+                            _id: _id,
+                            status: 5
+                        }, function(r) {
                             if (r && r.code == 0) {
                                 getAndRender();
                             }
@@ -278,11 +309,14 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                         break
                     case 'produce':
 
-                        orderRest.put({_id: _id, status: 2}, function (r) {
+                        orderRest.put({
+                            _id: _id,
+                            status: 2
+                        }, function(r) {
                             if (r && r.code == 0) {
                                 //getAndRender();
                                 var $progressbar = $('<div class="mask"><h3 class="loading">生成中...</h3></div>').appendTo('body');
-                                syncCodeAndProduce($tb, function () {
+                                syncCodeAndProduce($tb, function() {
                                     $progressbar.remove()
                                 })
 
@@ -291,7 +325,11 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                         });
                         break
                     case 'send':
-                        orderRest.put({_id: _id, status: 3, delivery_no: '123'}, function (r) {
+                        orderRest.put({
+                            _id: _id,
+                            status: 3,
+                            delivery_no: '123'
+                        }, function(r) {
                             if (r && r.code == 0) {
                                 getAndRender();
                             }
@@ -304,8 +342,9 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                 }
             });
             tpl = $('.J_tpl', $mod).html();
-            searchForm = $('.J_searchForm', $mod).on('change', function (e) {
-                var tar = e.target, name = tar.name;
+            searchForm = $('.J_searchForm', $mod).on('change', function(e) {
+                var tar = e.target,
+                    name = tar.name;
                 switch (name) {
                     case 'checkall':
                         if (tar.checked) {
@@ -339,13 +378,13 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
 
 
 
-            $mod.on('click', '[data-batch]', function (e) {
+            $mod.on('click', '[data-batch]', function(e) {
 
                 var tar = e.target;
                 switch (tar.getAttribute('data-batch')) {
                     case 'produce':
                         var tables = [];
-                        $('.J_ck', $list).each(function (i, n) {
+                        $('.J_ck', $list).each(function(i, n) {
                             var status = n.getAttribute('data-status');
                             if (n.checked && (status == StatusCodes.PAID || status == StatusCodes.UNPAID || status == StatusCodes.RECEIVED)) {
 
@@ -357,7 +396,7 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                             return false;
                         } else {
                             var $progressbar = $('<div class="mask"><h3 class="loading">生成中...</h3></div>').appendTo('body');
-                            syncCodeAndProduce($(tables), function (e) {
+                            syncCodeAndProduce($(tables), function(e) {
                                 //console.log('done',e)
                                 $progressbar.remove()
                             });
@@ -367,7 +406,7 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                         break
                     case 'refund':
                         var refundOrders = [];
-                        $('.J_ck', $list).each(function (i, n) {
+                        $('.J_ck', $list).each(function(i, n) {
                             if (n.checked && n.getAttribute('data-status') == StatusCodes.REFUND) {
                                 refundOrders.push(n.value)
                             }
@@ -375,7 +414,7 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
                         if (!refundOrders.length) {
                             alert('请选择订单');
                         } else {
-                            tar.href = refund_url+'?oids=' + refundOrders.join(',')
+                            tar.href = refund_url + '?oids=' + refundOrders.join(',')
                         }
                         break
                 }
