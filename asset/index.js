@@ -32,7 +32,7 @@ define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
     }
 
     var orderStatus = function (data) {
-        data.status = StatusCodes.PAID
+        //data.status = StatusCodes.PAID
         var st = data.status;
         switch (st) {
             case StatusCodes.NEW:
