@@ -1,5 +1,5 @@
-define(['mustache', 'oxjs'], function (Mustache, OXJS) {
-    var tpl, $list, customizeRest, orderRest, searchForm, $totalCount;
+define(['mustache', 'oxjs', './factory'], function (Mustache, OXJS, Factory) {
+    var tpl, $list, customizeRest, orderRest, codeRest, searchForm, $totalCount;
     var StatusCodes = {
         NEW: 0,
         UNPAID: 11,
@@ -32,6 +32,7 @@ define(['mustache', 'oxjs'], function (Mustache, OXJS) {
     }
 
     var orderStatus = function (data) {
+        data.status = StatusCodes.PAID
         var st = data.status;
         switch (st) {
             case StatusCodes.NEW:
@@ -41,7 +42,7 @@ define(['mustache', 'oxjs'], function (Mustache, OXJS) {
             case StatusCodes.PAID://todo: 后面去掉单独生产
                 return '<p>已付款</p><button data-role="produce" type="button">生产</button>';
             case StatusCodes.RECEIVED:
-                return '<p>生产中</p><button data-role="send" type="button">发货</button><br/><br/><button data-role="produce" type="button">重新生产</button><br/><br/><a href="/smctadmin/exportsheet?oids=' + data._id + '" target="download">导出发货单</a>';
+                return '<p>生产中</p><button data-role="send" type="button">发货</button><br/><button data-role="produce" type="button">重新生产</button><br/><a href="/smctadmin/exportsheet?oids=' + data._id + '" target="download">导出发货单</a>';
             case StatusCodes.DELIVERED:
                 return '<p>已发货</p><p>' + data.delivery_no + '</p><p><button data-role="wuliu" data-no="' + data.delivery_no + '">查看物流</button></p>';
             case StatusCodes.COMPLETED:
@@ -75,7 +76,7 @@ define(['mustache', 'oxjs'], function (Mustache, OXJS) {
         var status = sf.status.value;
         var days = sf.days.value;
         var _id = sf._id.value;
-        var s = {seller:1};
+        var s = {seller: 1};
         if (days) {
             var oneday = 24 * 3600 * 1000,
                 now = new Date;
@@ -89,7 +90,7 @@ define(['mustache', 'oxjs'], function (Mustache, OXJS) {
 
             switch (status) {
                 case 'admin':
-                    s.status = [StatusCodes.PAID,StatusCodes.RECEIVED,StatusCodes.REFUND,StatusCodes.REFUNDING,StatusCodes.REFUND_FAIL].join(',');
+                    s.status = [StatusCodes.PAID, StatusCodes.RECEIVED, StatusCodes.REFUND, StatusCodes.REFUNDING, StatusCodes.REFUND_FAIL].join(',');
                     break
                 case 'produce':
                     s.status = StatusCodes.PAID;
@@ -160,42 +161,138 @@ define(['mustache', 'oxjs'], function (Mustache, OXJS) {
                 });
 
             } else {
-                $list.html('<div class="empty-order"><i class="iconfont">&#xe631;</i>&nbsp;&nbsp;<br/>该查询条件下暂无订单~<br/><br/><br/></div>');
+                $list.html('<div class="empty-order"><i class="iconfont">&#xe631;</i>&nbsp;&nbsp;<br/>该查询条件下暂无订单~<br/><br/></div>');
                 $totalCount.html(0)
             }
         });
     };
+    var createBatchNo = function () {
+        var key = 'produceBatchJSON';
+        var produceJSON = localStorage.getItem(key) || '{}';
+
+        produceJSON = JSON.parse(produceJSON);
+
+        var producerNo = 1;//
+        var today = new Date();
+        var datestamp = today.getFullYear() % 2000 * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+        var batchIndex = produceJSON[datestamp.toString()] || 0;
+        batchIndex++;
+        produceJSON[datestamp.toString()] = batchIndex;
+
+        localStorage.setItem(key, JSON.stringify(produceJSON))
+
+        return [producerNo, datestamp * 100 + batchIndex].join('')
+
+
+    };
+
+    var syncCodeAndProduce = function ($ordertables, fn) {
+
+        var batchNo = createBatchNo();
+
+        // var totalcount = 0;
+        var renderConf = {};
+        var qs_json = [];
+        var oids = [];
+        $ordertables.each(function (idex, tbl) {
+            var oid = this.getAttribute('data-id'),
+                code_qs = {tid: oid, count: 0};
+            //oids.push(oid);
+            $('tbody>tr>td>.order-item', this).each(function (i, n) {
+                var $n = $(n),
+                    bid = $n.attr('data-bid'),
+                    count = $n.attr('data-count') * 1,
+                    $preview = $('.preview', $n);
+                // totalcount += count;
+                code_qs.count += count;
+
+                renderConf[bid] = {
+                    count: count,
+                    oid: oid,
+                    tplcolor: $preview.css('background-color'),
+                    text1: $('.card-header', $preview).text(),
+                    text2: $('.card-footer>span', $preview).text(),
+                    carlogo: $('.central>img',$preview).attr('src')
+                }
+            });
+            qs_json.push(code_qs)
+
+
+        });
+        codeRest.post({json: JSON.stringify(qs_json)}, function (r) {
+            //$.post('/smctadmin/produce', {oids: oids.join(','), batch_no: batchNo}, function (r) {
+
+            var codes = [],
+                newcodes = r.message
+
+            for (var i = 0, c; c = newcodes[i++];) {
+                codes.push({
+                    oid: c.tid,
+                    code: c.code,
+                    prod_no: batchNo + '-' + i
+                })
+            }
+            var order_codes = [];
+            for (var k in renderConf) {
+                var count = renderConf[k].count;
+                var oid = renderConf[k].oid;
+
+                for (var j = 0; j < codes.length; j++) {
+                    if (codes[j].oid == oid) {
+                        order_codes.push({code: codes[j], renderConf: renderConf[k]});
+                        codes.splice(j, 1);
+                        j--;
+                        count--;
+                    }
+                    if(!count)break
+                }
+
+            }
+            Factory.composeProduce(order_codes, batchNo, fn)
+
+        });
+
+
+    };
     return {
         init: function ($mod) {
-            $list = $('.J_list', $mod).on('click',function(e){
-                var tar=e.target,
-                    $tb=$(tar).closest('table'),
-                    _id=$tb.attr('data-id')
-                switch (tar.getAttribute('data-role')){
+            var refund_url=$mod.attr('data-refund');
+            $list = $('.J_list', $mod).on('click', function (e) {
+                var tar = e.target,
+                    $tb = $(tar).closest('table'),
+                    _id = $tb.attr('data-id')
+                switch (tar.getAttribute('data-role')) {
                     case 'del':
-                        orderRest.del({_id:_id},function(r){
-                            if(r && r.code==0){
+                        orderRest.del({_id: _id}, function (r) {
+                            if (r && r.code == 0) {
                                 $tb.remove();
                             }
                         });
                         break
                     case 'close':
-                        orderRest.put({_id:_id,status:5},function(r){
-                            if(r && r.code==0){
+                        orderRest.put({_id: _id, status: 5}, function (r) {
+                            if (r && r.code == 0) {
                                 getAndRender();
                             }
                         });
                         break
                     case 'produce':
-                        orderRest.put({_id:_id,status:2},function(r){
-                            if(r && r.code==0){
-                                getAndRender();
+
+                        orderRest.put({_id: _id, status: 2}, function (r) {
+                            if (r && r.code == 0) {
+                                //getAndRender();
+                                var $progressbar = $('<div class="mask"><h3 class="loading">生成中...</h3></div>').appendTo('body');
+                                syncCodeAndProduce($tb, function () {
+                                    $progressbar.remove()
+                                })
+
+
                             }
                         });
                         break
                     case 'send':
-                        orderRest.put({_id:_id,status:3,delivery_no:'123'},function(r){
-                            if(r && r.code==0){
+                        orderRest.put({_id: _id, status: 3, delivery_no: '123'}, function (r) {
+                            if (r && r.code == 0) {
                                 getAndRender();
                             }
                         });
@@ -207,18 +304,82 @@ define(['mustache', 'oxjs'], function (Mustache, OXJS) {
                 }
             });
             tpl = $('.J_tpl', $mod).html();
-            searchForm = $('.J_searchForm', $mod).on('change',getAndRender)[0];
+            searchForm = $('.J_searchForm', $mod).on('change', function (e) {
+                var tar = e.target, name = tar.name;
+                switch (name) {
+                    case 'checkall':
+                        if (tar.checked) {
+                            $('.J_ck', $list).attr('checked', 'checked')
+                        } else {
+                            $('.J_ck', $list).removeAttr('checked')
+                        }
+
+                        break
+                    case '':
+                        break
+                    case 'days':
+                    case 'status':
+                    case '_id':
+                        getAndRender();
+                        break
+                }
+                //
+            })[0];
             $totalCount = $('.J_totalCount', $mod);
             var uid = $mod.attr('data-uid'),
                 dsid = $mod.attr('data-dsid');
             //payurl=$mod.attr('data-payurl');
-            customizeRest = OXJS.useREST('customize/' + dsid + '/u/' + encodeURIComponent(uid)).setDevHost('http://dev.openxsl.com/'),
-                orderRest = OXJS.useREST('order/' + dsid + '/u/' + encodeURIComponent(uid)).setDevHost('http://dev.openxsl.com/');
+            customizeRest = OXJS.useREST('customize/' + dsid + '/u/' + encodeURIComponent(uid)).setDevHost('http://dev.openxsl.com/');
+            orderRest = OXJS.useREST('order/' + dsid + '/u/' + encodeURIComponent(uid)).setDevHost('http://dev.openxsl.com/');
 
-
+            codeRest = OXJS.useREST('code/' + dsid + '/u/' + encodeURIComponent(uid)).setDevHost('http://dev.openxsl.com/');
 
 
             getAndRender();
+
+
+
+            $mod.on('click', '[data-batch]', function (e) {
+
+                var tar = e.target;
+                switch (tar.getAttribute('data-batch')) {
+                    case 'produce':
+                        var tables = [];
+                        $('.J_ck', $list).each(function (i, n) {
+                            var status = n.getAttribute('data-status');
+                            if (n.checked && (status == StatusCodes.PAID || status == StatusCodes.UNPAID || status == StatusCodes.RECEIVED)) {
+
+                                tables.push($(n).closest('table')[0])
+                            }
+                        });
+                        if (!tables.length) {
+                            alert('请选择订单');
+                            return false;
+                        } else {
+                            var $progressbar = $('<div class="mask"><h3 class="loading">生成中...</h3></div>').appendTo('body');
+                            syncCodeAndProduce($(tables), function (e) {
+                                //console.log('done',e)
+                                $progressbar.remove()
+                            });
+
+                            return true;
+                        }
+                        break
+                    case 'refund':
+                        var refundOrders = [];
+                        $('.J_ck', $list).each(function (i, n) {
+                            if (n.checked && n.getAttribute('data-status') == StatusCodes.REFUND) {
+                                refundOrders.push(n.value)
+                            }
+                        });
+                        if (!refundOrders.length) {
+                            alert('请选择订单');
+                        } else {
+                            tar.href = refund_url+'?oids=' + refundOrders.join(',')
+                        }
+                        break
+                }
+            })
 
         }
     }

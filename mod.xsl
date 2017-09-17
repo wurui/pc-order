@@ -1,8 +1,13 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxm="https://www.openxsl.com">
     <xsl:template match="/root" name="wurui.pc-order">
         <xsl:param name="dsid">e0ee59439b39fcc3</xsl:param>
+        <xsl:param name="refund_url"/>
         <!-- className 'J_OXMod' required  -->
-        <div class="J_OXMod oxmod-pc-order" ox-mod="pc-order" data-uid="{login/uid}" data-dsid="{$dsid}">
+        <div class="J_OXMod oxmod-pc-order" ox-mod="pc-order" data-uid="{login/uid}" data-dsid="{$dsid}" data-refund="{$refund_url}">
+            <xsl:variable name="id" select="generate-id(.)"/>
+            <form action="/smctadmin/importsheet" class="J_import" target="download" method="post" enctype="multipart/form-data">
+                <input type="file" name="sheet" id="fileImport_{$id}" style="display: none;" onchange="importSheet(this)"/>
+            </form>
             <form class="J_searchForm">
                 <div class="searchbar lrbar lrbar37">
                     <span>
@@ -28,22 +33,22 @@
                         &#160;
                     </span>
                     <span class="admin-ops">
-                        <button type="button" onclick="batchProduct()" class="bt-produce">
+                        <button type="button" data-batch="produce" class="bt-produce">
                             <i class="iconfont">&#xe64c;</i>
                             生产
                         </button>
                         &#160;&#160;&#160;&#160;
-                        <a href="/smct/dealrefund" target="_blank" onclick="return batchRefund(this)" class="bt-refund">
+                        <a href="/smct/dealrefund" target="_blank" data-batch="refund" class="bt-refund">
                             <i class="iconfont">&#xe671;</i>
                             退款
                         </a>
                         &#160;&#160;&#160;&#160;
-                        <a href="" target="download" class="bt-refund" onclick="return batchExport(this)">
+                        <a href="" target="download" class="bt-refund" data-batch="export">
                             <i class="iconfont">&#xe66b;</i>
                             导出发货单
                         </a>
                         &#160;&#160;&#160;&#160;
-                        <label class="bt-refund" for="fileImport">
+                        <label class="bt-refund" for="fileImport_{$id}">
                             <i class="iconfont">&#xe607;</i>
                             导入物流单
                         </label>
@@ -57,6 +62,7 @@
                 </div>
             </form>
 
+
             <div class="J_list"></div>
             <div class="lrbar">
                 <span>
@@ -64,17 +70,17 @@
                 </span>
                 <span class="admin-ops">
                     批量操作&#160;&#160;
-                    <button type="button" onclick="batchProduct()" class="bt-produce">
+                    <button type="button" data-batch="produce" class="bt-produce">
                         <i class="iconfont">&#xe64c;</i>
                         生产
                     </button>
                     &#160;&#160;&#160;&#160;
-                    <a href="/smct/dealrefund" target="_blank" onclick="return batchRefund(this)" class="bt-refund">
+                    <a href="/smct/dealrefund" target="_blank" data-batch="refund" class="bt-refund">
                         <i class="iconfont">&#xe671;</i>
                         退款
                     </a>
                     &#160;&#160;&#160;&#160;
-                    <button type="button" class="bt-refund">
+                    <button type="button" class="bt-refund" data-batch="export">
                         <i class="iconfont">&#xe66b;</i>
                         导出发货单
                     </button>
@@ -104,7 +110,7 @@
                 <tr>
                     <td colspan="2">
                         {{#pack}}
-                        <div class="order-item" data-bid="{{bid}}" data-count="{{amount}}">
+                        <div class="order-item" data-bid="{{customize}}" data-count="{{amount}}">
                             <div class="snapshot">
                                 <div class="preview bgcolor-{{setting.bgcolor}}"">
                                 <div class="card-header">{{setting.text1}}</div>
