@@ -311,7 +311,7 @@ define(['mustache', 'oxjs', './factory', './excel'], function(Mustache, OXJS, Fa
                         case 'close':
                             orderRest.put({
                                 _id: _id,
-                                status: 5
+                                status: StatusCodes.CLOSED
                             }, function(r) {
                                 if (r && r.code == 0) {
                                     getAndRender();
@@ -322,7 +322,7 @@ define(['mustache', 'oxjs', './factory', './excel'], function(Mustache, OXJS, Fa
 
                             orderRest.put({
                                 _id: _id,
-                                status: 2
+                                status: StatusCodes.RECEIVED
                             }, function(r) {
                                 if (r && r.code == 0) {
                                     //getAndRender();
@@ -339,7 +339,7 @@ define(['mustache', 'oxjs', './factory', './excel'], function(Mustache, OXJS, Fa
                             var delivery_no = prompt('物流订单号')
                             orderRest.put({
                                 _id: _id,
-                                status: 3,
+                                status: StatusCodes.DELIVERED,
                                 process_data: delivery_no
                             }, function(r) {
                                 if (r && r.code == 0) {
