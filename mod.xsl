@@ -5,8 +5,8 @@
         <!-- className 'J_OXMod' required  -->
         <div class="J_OXMod oxmod-pc-order" ox-mod="pc-order" data-uid="{login/uid}" data-dsid="{$dsid}" data-refund="{$refund_url}">
             <xsl:variable name="id" select="generate-id(.)"/>
-            <form action="/smctadmin/importsheet" class="J_import" target="download" method="post" enctype="multipart/form-data">
-                <input type="file" name="sheet" id="fileImport_{$id}" style="display: none;" onchange="importSheet(this)"/>
+            <form action="http://dev.openxsl.com/rest/order/e0ee59439b39fcc3/u/git%2Fwurui" class="J_import" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" id="fileImport_{$id}" style="display: none;" />
             </form>
             <form class="J_searchForm">
                 <div class="searchbar lrbar lrbar37">
@@ -43,10 +43,10 @@
                             退款
                         </a>
                         &#160;&#160;&#160;&#160;
-                        <a href="" target="download" class="bt-refund" data-batch="export">
+                        <button type="button"  class="bt-refund" data-batch="export">
                             <i class="iconfont">&#xe66b;</i>
                             导出发货单
-                        </a>
+                        </button>
                         &#160;&#160;&#160;&#160;
                         <label class="bt-refund" for="fileImport_{$id}">
                             <i class="iconfont">&#xe607;</i>
