@@ -52,7 +52,7 @@ define(['mustache', 'oxjs', './factory', './excel'], function(Mustache, OXJS, Fa
             case StatusCodes.PAID: //todo: 后面去掉单独生产
                 return '<p>已付款</p><button data-role="produce" type="button">生产</button>';
             case StatusCodes.RECEIVED:
-                return '<p>生产中</p><button data-role="send" type="button">发货</button><br/><button data-role="produce" type="button">重新生产</button><br/><a href="/smctadmin/exportsheet?oids=' + data._id + '" target="download">导出发货单</a>';
+                return '<p>生产中</p><button data-role="send" type="button">发货</button><br/><button data-role="produce" type="button">重新生产</button>';
             case StatusCodes.DELIVERED:
                 var delivery_no = getProcessData(data);
 
