@@ -1,9 +1,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxm="https://www.openxsl.com">
     <xsl:template match="/root" name="wurui.pc-order">
-        <xsl:param name="dsid">e0ee59439b39fcc3</xsl:param>
         <xsl:param name="refund_url"/>
         <!-- className 'J_OXMod' required  -->
-        <div class="J_OXMod oxmod-pc-order" ox-mod="pc-order" data-uid="{login/uid}" data-dsid="{$dsid}" data-refund="{$refund_url}">
+        <div class="J_OXMod oxmod-pc-order" ox-mod="pc-order" data-uid="{login/uid}" data-refund="{$refund_url}">
             <xsl:variable name="id" select="generate-id(.)"/>
             <form action="http://dev.openxsl.com/rest/order/e0ee59439b39fcc3/u/git%2Fwurui" class="J_import" method="post" enctype="multipart/form-data">
                 <input type="file" name="file" id="fileImport_{$id}" style="display: none;" />

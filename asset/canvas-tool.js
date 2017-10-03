@@ -4,11 +4,11 @@
 
 
 define(['./qrcode','oxjs'], function (undef,OXJS) {
-    var imgToolRest=OXJS.useREST('imgtool/src2base64').setDevHost('http://dev.openxsl.com/');
+    var imgToolRest=OXJS.useREST('imgtool').setDevHost('http://dev.openxsl.com/');
     var PreloadImg = {
         firmqrcode: function (img) {
             var src='http://i.oxm1.cc/uploads/git/wurui/img/2aed4puhiTj4z8br8aRqmqdA1ua-1000.png';
-            imgToolRest.get({src: encodeURIComponent(src)}, function (r) {
+            imgToolRest.get({src: encodeURIComponent(src),method:'src2base64'}, function (r) {
                 img.src = r;
             })
 

@@ -377,13 +377,11 @@ define(['mustache', 'oxjs', './factory', './excel'], function(Mustache, OXJS, Fa
                     //
                 })[0];
                 $totalCount = $('.J_totalCount', $mod);
-                var uid = $mod.attr('data-uid'),
-                    dsid = $mod.attr('data-dsid');
-                //payurl=$mod.attr('data-payurl');
-                customizeRest = OXJS.useREST('customize/' + dsid + '/u/' + encodeURIComponent(uid)).setDevHost('http://dev.openxsl.com/');
-                orderRest = OXJS.useREST('order/' + dsid + '/u/' + encodeURIComponent(uid)).setDevHost('http://dev.openxsl.com/');
+               
+                customizeRest = OXJS.useREST('customize').setDevHost('http://dev.openxsl.com/');
+                orderRest = OXJS.useREST('order').setDevHost('http://dev.openxsl.com/');
 
-                codeRest = OXJS.useREST('code/' + dsid + '/u/' + encodeURIComponent(uid)).setDevHost('http://dev.openxsl.com/');
+                codeRest = OXJS.useREST('code').setDevHost('http://dev.openxsl.com/');
 
 
                 getAndRender();
