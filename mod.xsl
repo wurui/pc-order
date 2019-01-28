@@ -4,7 +4,7 @@
         <!-- className 'J_OXMod' required  -->
         <div class="J_OXMod oxmod-pc-order" ox-mod="pc-order" data-uid="{login/uid}" data-refund="{$refund_url}">
             <xsl:variable name="id" select="generate-id(.)"/>
-            <form action="http://dev.openxsl.com/rest/order/e0ee59439b39fcc3/u/git%2Fwurui" class="J_import" method="post" enctype="multipart/form-data">
+            <form action="http://dev.openxsl.com/rest/order" class="J_import" method="post" enctype="multipart/form-data">
                 <input type="file" name="file" id="fileImport_{$id}" style="display: none;" />
             </form>
             <form class="J_searchForm">
